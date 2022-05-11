@@ -1,9 +1,6 @@
 import pygame
 
-from tracer import raytrace
-
-# Constants
-WIN_W, WIN_H = 1200, 750
+from tracer import raytrace, WIN_W, WIN_H
 
 # Init
 pygame.display.init()
@@ -14,7 +11,7 @@ screen_surface = pygame.display.set_mode(
 
 # Ray Trace
 screen_arr = pygame.surfarray.array2d(screen_surface)
-raytrace(screen_arr, WIN_W, WIN_H)
+raytrace(screen_arr)
 pygame.surfarray.blit_array(screen_surface, screen_arr)
 
 # Loop

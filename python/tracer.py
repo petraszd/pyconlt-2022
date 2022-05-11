@@ -1,12 +1,70 @@
 import time
+from random import random
 from math import sqrt
 
-from ray import Ray
-from vec3 import Vec3, unit, random_in_unit_sphere, reflect
-from sphere import Sphere
+
+# Vec3
+# ----
+
+class Vec3:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __iter__(self):
+        return iter((self.x, self.y, self.z))
+
+    def __truediv__(self, num):
+        return Vec3(self.x / num, self.y / num, self.z / num)
+
+    def __mul__(self, num):
+        return Vec3(self.x * num, self.y * num, self.z * num)
+
+    def __rmul__(self, num):
+        return Vec3(self.x * num, self.y * num, self.z * num)
+
+    def __add__(self, v):
+        return Vec3(self.x + v.x, self.y + v.y, self.z + v.z)
+
+    def __sub__(self, v):
+        return Vec3(self.x - v.x, self.y - v.y, self.z - v.z)
 
 
-SAMPLES_PER_EDGE = 6
+# Sphere
+# ------
+
+class Sphere:
+    def __init__(self, center, radius, material):
+        self.center = center
+        self.radius = radius
+        self.material = material
+
+
+# Hit
+# ---
+class Hit:
+    def __init__(self, point, normal, t, material):
+        self.point = point
+        self.normal = normal
+        self.t = t
+        self.material = material
+
+
+# Ray
+# ---
+class Ray:
+    def __init__(self, orig, dir):
+        self.orig = orig
+        self.dir = dir
+
+    def at(self, t):
+        return self.orig + self.dir * t
+
+
+WIN_W, WIN_H = 320, 240
+# WIN_W, WIN_H = 1200, 750
+SAMPLES_PER_EDGE = 1
 SAMPLES_PER_PIXEL = SAMPLES_PER_EDGE * SAMPLES_PER_EDGE
 BACK_TOP_COLOR = Vec3(1.0, 1.0, 1.0)
 BACK_BOTTOM_COLOR = Vec3(0.5, 0.7, 1.0)
@@ -22,11 +80,11 @@ SPHERES = [
 ]
 
 
-def raytrace(arr, w, h):
+def raytrace(arr):
     start_time = time.time()
 
     # Camera
-    aspect_ratio = w / h
+    aspect_ratio = WIN_W / WIN_H
     viewport_height = 2.0
     viewport_width = aspect_ratio * viewport_height
     focal_length = 1.0
@@ -44,18 +102,18 @@ def raytrace(arr, w, h):
     aa_dist = 1.0 / SAMPLES_PER_EDGE
     half_aa_dist = aa_dist / 2.0
 
-    for y in range(h):
+    for y in range(WIN_H):
         if y % 10 == 0:
-            print(f"Progress = {(y / (h - 1) * 100):6.02f}%", end="\r")
+            print(f"Progress = {(y / (WIN_H - 1) * 100):6.02f}%", end="\r")
 
-        for x in range(w):
+        for x in range(WIN_W):
             accum = Vec3(0.0, 0.0, 0.0)
             for i in range(SAMPLES_PER_PIXEL):
                 delta_u = half_aa_dist + i % SAMPLES_PER_EDGE * aa_dist
                 delta_v = half_aa_dist + i // SAMPLES_PER_EDGE * aa_dist
 
-                v = (y + delta_u) / (h - 1.0)
-                u = (x + delta_v) / (w - 1.0)
+                v = (y + delta_u) / (WIN_H - 1.0)
+                u = (x + delta_v) / (WIN_W - 1.0)
 
                 ray_dir = unit(
                     lower_left_corner +
@@ -72,7 +130,7 @@ def raytrace(arr, w, h):
             g = sqrt(scale * g)
             b = sqrt(scale * b)
 
-            arr[x, h - y - 1] = (
+            arr[x, WIN_H - y - 1] = (
                 int(r * 255) << 16 |
                 int(g * 255) << 8 |
                 int(b * 255) << 0
@@ -119,10 +177,83 @@ def hit_all_spheres(ray, t_min, t_max):
     is_any_hit = False
     closest_hit = None
     for sphere in SPHERES:
-        is_hit, hit = sphere.hit_with_ray(ray, t_min, closest)
+        is_hit, hit = hit_with_ray(sphere, ray, t_min, closest)
         if is_hit:
             closest_hit = hit
             closest = hit.t
             is_any_hit = True
 
     return is_any_hit, closest_hit
+
+
+def unit(v):
+    return v / length(v)
+
+
+def length_squared(v):
+    return v.x * v.x + v.y * v.y + v.z * v.z
+
+
+def length(v):
+    return sqrt(length_squared(v))
+
+
+def dot(a, b):
+    return a.x * b.x + a.y * b.y + a.z * b.z
+
+
+def random_in_unit_sphere():
+    result = Vec3(
+        (random() - 0.5) * 2.0,
+        (random() - 0.5) * 2.0,
+        (random() - 0.5) * 2.0,
+    )
+    if length_squared(result) >= 1:
+        result.x = (random() - 0.5) * 2.0
+        result.y = (random() - 0.5) * 2.0
+        result.z = (random() - 0.5) * 2.0
+    return result
+
+
+def reflect(v, normal):
+    return unit(v - normal * 2.0 * dot(v, normal))
+
+
+DEFAULT_HIT = Hit(
+    point=Vec3(0.0, 0.0, 0.0),
+    normal=Vec3(0.0, 0.0, 0.0),
+    t=0.0,
+    material=0,
+)
+
+
+def hit_with_ray(sphere, ray, t_min, t_max):
+    oc = ray.orig - sphere.center
+    a = length_squared(ray.dir)
+    half_b = dot(oc, ray.dir)
+    c = length_squared(oc) - sphere.radius * sphere.radius
+    discriminant = half_b * half_b - a * c
+
+    if discriminant < 0.0:
+        return False, DEFAULT_HIT
+
+    sqrt_discriminant = sqrt(discriminant)
+    root = (-half_b - sqrt_discriminant) / a
+    if root < t_min or root > t_max:
+        root = (-half_b + sqrt_discriminant) / a
+        if root < t_min or root > t_max:
+            return False, DEFAULT_HIT
+
+    t = root
+    point = ray.at(t)
+    normal = (point - sphere.center) / sphere.radius
+    is_font_face = dot(ray.dir, normal) < 0
+    if not is_font_face:
+        normal = normal * -1.0
+
+    return True, Hit(
+        t=root,
+        point=ray.at(t),
+        normal=normal,
+        material=sphere.material,
+    )
