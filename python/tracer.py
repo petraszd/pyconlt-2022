@@ -31,14 +31,15 @@ class Vec3:
         return Vec3(self.x - v.x, self.y - v.y, self.z - v.z)
 
 
-# Sphere
-# ------
+# Ray
+# ---
+class Ray:
+    def __init__(self, orig, dir):
+        self.orig = orig
+        self.dir = dir
 
-class Sphere:
-    def __init__(self, center, radius, material):
-        self.center = center
-        self.radius = radius
-        self.material = material
+    def at(self, t):
+        return self.orig + self.dir * t
 
 
 # Hit
@@ -51,15 +52,14 @@ class Hit:
         self.material = material
 
 
-# Ray
-# ---
-class Ray:
-    def __init__(self, orig, dir):
-        self.orig = orig
-        self.dir = dir
+# Sphere
+# ------
 
-    def at(self, t):
-        return self.orig + self.dir * t
+class Sphere:
+    def __init__(self, center, radius, material):
+        self.center = center
+        self.radius = radius
+        self.material = material
 
 
 WIN_W, WIN_H = 320, 240

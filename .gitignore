@@ -1,4 +1,5 @@
 python/env/*
+python/pypy_env/*
 zig/zig-cache/*
 zig/zig-out/*
 .DS_Store
