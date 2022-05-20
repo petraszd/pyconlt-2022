@@ -1,6 +1,20 @@
+.DS_Store
 python/env/*
 python/pypy_env/*
+python/__pycache__/*
 zig/zig-cache/*
 zig/zig-out/*
-.DS_Store
-python/__pycache__/*
+PyCon2022LT-Slides/Assembly-CSharp.csproj
+PyCon2022LT-Slides/Library/*
+PyCon2022LT-Slides/Logs/*
+PyCon2022LT-Slides/Temp/*
+PyCon2022LT-Slides/UserSettings/*
+PyCon2022LT-Slides/PyCon2022LT-Slides.sln
+PyCon2022LT-Slides/obj/*
+PyCon2022LT-Slides/Output/*
+PyCon2022LT-Slides/ProjectSettings/*
+PyCon2022LT-Slides/Assets/TextMesh Pro/*
+PyCon2022LT-Slides/Packages/packages-lock.json
+PyCon2022LT-Slides/Assets/StreamingAssets.meta
+PyCon2022LT-Slides/Assets/TextMesh Pro.meta
+PyCon2022LT-Slides/.vsconfig/*
