@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlideShow : MonoBehaviour
 {
-  public Canvas[] Slides;
+  public Transform[] Slides;
   private Transform CurrentSlide = null;
   private int CurrentIndex = 0;
 
@@ -54,12 +54,10 @@ public class SlideShow : MonoBehaviour
       CurrentIndex = Slides.Length - 1;
     }
 
-    Debug.LogFormat("Next Index = {0}", CurrentIndex);
-
     if (CurrentSlide != null) {
       Destroy(CurrentSlide.gameObject);
     }
-    CurrentSlide = (Instantiate(Slides[CurrentIndex]) as Canvas).transform;
+    CurrentSlide = Instantiate(Slides[CurrentIndex]) as Transform;
     CurrentSlide.SetParent(transform);
   }
 }
