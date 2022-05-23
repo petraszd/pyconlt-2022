@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Backstory
+  m_text: Good lessons to learn
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 4953891567306317255}
   - component: {fileID: 4953891567306317272}
   m_Layer: 5
-  m_Name: Slide_02
+  m_Name: Slide_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -304,9 +304,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u25CF I was learning Zig programming language\n\u25CF I was also learning
-    ray traycing\n\u25CF Ray Tracing in One Weekend (https://raytracing.github.io/)\n\u25CF
-    I was wondering is it insane to do it in Python?"
+  m_text: "\u25CF PyPy JIT is really good\n\u25CF numpy is really good but you need
+    to know how to use it\n\u25CF It is possible to learn about ray tracing using
+    Python\n\u25CF Though it is not ideal"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
