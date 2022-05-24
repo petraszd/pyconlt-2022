@@ -1,3 +1,4 @@
+import time
 import pygame
 
 from tracer import raytrace, WIN_W, WIN_H
@@ -11,7 +12,12 @@ screen_surface = pygame.display.set_mode(
 
 # Ray Trace
 screen_arr = pygame.surfarray.array2d(screen_surface)
+
+start_time = time.time()
 raytrace(screen_arr)
+delta_time = time.time() - start_time
+print(f"Generation took {delta_time:.02f}s")
+
 pygame.surfarray.blit_array(screen_surface, screen_arr)
 
 # Loop

@@ -1,11 +1,9 @@
-import time
 from random import random
 from math import sqrt
 
 
 # Vec3
 # ----
-
 class Vec3:
     def __init__(self, x, y, z):
         self.x = x
@@ -81,7 +79,6 @@ SPHERES = [
 
 
 def raytrace(arr):
-    start_time = time.time()
 
     # Camera
     aspect_ratio = WIN_W / WIN_H
@@ -136,9 +133,6 @@ def raytrace(arr):
                 int(b * 255) << 0
             )
     print("Progress = 100.00%")
-
-    delta_time = time.time() - start_time
-    print(f"Generation took {delta_time:.02f}s")
 
 
 def ray_color(ray, depth):
